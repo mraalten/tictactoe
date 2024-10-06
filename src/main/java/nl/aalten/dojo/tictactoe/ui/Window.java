@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 import nl.aalten.dojo.tictactoe.domain.Game;
+import nl.aalten.dojo.tictactoe.domain.board.Board;
 
 public class Window extends JFrame {
     private final BoardPanel boardPanel;
@@ -27,5 +28,12 @@ public class Window extends JFrame {
         setVisible(true);
     }
 
+    public void showMessage(String message) {
+        JOptionPane.showMessageDialog(this, message);
+    }
+
+    public void drawBoard(Board board) {
+        this.boardPanel.drawBoard(board.getPlayerMarks());
+    }
 
 }

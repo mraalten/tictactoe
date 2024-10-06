@@ -13,5 +13,4 @@
 
 ## Future implementations
 * Smart first move determination (current situation is left top corner when board is empty)
-* Intelligence level setting: now all possible win-lines will be evaluated for best next move; the result is that often there is no winner.  
-  When setting the intelligence level lower chances for a winner will increase.
+* Intelligence level setting: now all possible win-lines will be evaluated for best next move; the result is that often there is no winner. When setting the intelligence level lower chances for a winner will increase.
