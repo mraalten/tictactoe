@@ -1,10 +1,11 @@
 package nl.aalten.dojo.tictactoe;
 
-import nl.aalten.dojo.tictactoe.ui.TicTacToeWindow;
+import nl.aalten.dojo.tictactoe.domain.Game;
 
 public class Main {
 
     public static void main(String[] args) {
-        new TicTacToeWindow();
+        final Game game = new Game();
+        game.start();
     }
 }

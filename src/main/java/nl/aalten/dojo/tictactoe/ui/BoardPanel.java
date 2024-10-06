@@ -3,7 +3,7 @@ package nl.aalten.dojo.tictactoe.ui;
 import javax.swing.*;
 import java.awt.*;
 
-import nl.aalten.dojo.tictactoe.domain.PlayerMark;
+import nl.aalten.dojo.tictactoe.domain.board.PlayerMark;
 
 public class BoardPanel extends JPanel  {
     private JButton[][] buttons;

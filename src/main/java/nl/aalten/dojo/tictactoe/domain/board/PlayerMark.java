@@ -1,4 +1,4 @@
-package nl.aalten.dojo.tictactoe.domain;
+package nl.aalten.dojo.tictactoe.domain.board;
 
 public enum PlayerMark {
     X("X"),

@@ -3,17 +3,17 @@ package nl.aalten.dojo.tictactoe.ui;
 import javax.swing.*;
 import java.awt.*;
 
-import nl.aalten.dojo.tictactoe.domain.TicTacToeBoard;
+import nl.aalten.dojo.tictactoe.domain.Game;
 
-public class TicTacToeWindow extends JFrame {
-    private final BoardPanel boardPanel = new BoardPanel();
-    private TicTacToeBoard board = new TicTacToeBoard(boardPanel);
-    private final Button resetGameButton = new Button("Reset game", board);
+public class Window extends JFrame {
+    private final BoardPanel boardPanel;
+    private final ResetGameButton resetGameButton;
 
-    public TicTacToeWindow() {
+    public Window(Game game) {
+        this.boardPanel = new BoardPanel();
+        this.resetGameButton = new ResetGameButton();
+        this.resetGameButton.addActionListener(e -> game.reset());
         drawWindow();
-        board.startGame();
-//        boardPanel.startGame();
     }
 
     private void drawWindow() {
