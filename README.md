@@ -10,3 +10,8 @@
 * Separate UI from Domain
 * Work TDD, write tests first to fail, then write the implementation to fix the test
 * Due to the amount of time to develop only the domain will be unit-tested
+
+## Future implementations
+* Smart first move determination (current situation is left top corner when board is empty)
+* Intelligence level setting: now all possible win-lines will be evaluated for best next move; the result is that often there is no winner.  
+  When setting the intelligence level lower chances for a winner will increase.

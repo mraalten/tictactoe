@@ -7,20 +7,24 @@ public class Board {
         return new PlayerMark[3][3];
     }
 
-    public void placeMark(Player player, Cell cell) {
-
+    public void placeMark(Player player, Cell cell) throws IllegalStateException {
+        throw new IllegalStateException("Not implemented yet");
     }
 
-    public Cell determineNextMove(Player player) {
-        return new Cell(0, 0);
+    public Cell determineNextBestMove(Player player) {
+        throw new IllegalStateException("Not implemented yet");
     }
 
     public Player checkForWinner() {
-        return null;
+        throw new IllegalStateException("Not implemented yet");
     }
 
     public boolean isBoardFull() {
-        return true;
+        throw new IllegalStateException("Not implemented yet");
+    }
+
+    public boolean hasPlacedMark(Player player) {
+        throw new IllegalStateException("Not implemented yet");
     }
 
 }
