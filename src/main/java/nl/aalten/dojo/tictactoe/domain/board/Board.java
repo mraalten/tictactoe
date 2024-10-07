@@ -107,14 +107,14 @@ public class Board {
 
     public boolean isBoardFull() {
         return stream(playerMarks)
-                .allMatch(row -> stream(row)
-                .allMatch(Objects::nonNull));
+            .allMatch(row -> stream(row)
+            .allMatch(Objects::nonNull));
     }
 
     public boolean hasPlacedMark(Player player) {
         return stream(playerMarks)
-                .flatMap(Arrays::stream)
-                .anyMatch(mark -> mark == player.mark());
+            .flatMap(Arrays::stream)
+            .anyMatch(mark -> mark == player.mark());
     }
 
     public void reset() {
