@@ -77,11 +77,14 @@ public class Board {
     }
 
     private Optional<Cell> getEmptyCellOnWinLineWithMarksFor(Player player, int numberOfMarks) {
-        return winLines.stream()
-                .filter(winline -> getNumberOfMarksOnWinLine(player, winline) == numberOfMarks)
+        return getWinLineForPlayerWithNumberOfMarks(player, numberOfMarks)
                 .map(this::winLineHasEmptyCell)
                 .flatMap(Optional::stream)
                 .findFirst();
+    }
+
+    private Stream<WinLine> getWinLineForPlayerWithNumberOfMarks(Player player, int numberOfMarks) {
+        return winLines.stream().filter(winline -> getNumberOfMarksOnWinLine(player, winline) == numberOfMarks);
     }
 
     private long getNumberOfMarksOnWinLine(Player player, WinLine winline) {
@@ -97,15 +100,9 @@ public class Board {
     }
 
     public Optional<Player> getWinner() {
-        final Optional<WinLine> winLineWithThreeMarksPlayerX = winLines.stream().filter(winline -> getNumberOfMarksOnWinLine(PLAYER_X, winline) == 3).findFirst();
-        if (winLineWithThreeMarksPlayerX.isPresent()) {
-            return Optional.of(PLAYER_X);
-        }
-        final Optional<WinLine> winLineWithThreeMarksPlayerO = winLines.stream().filter(winline -> getNumberOfMarksOnWinLine(PLAYER_O, winline) == 3).findFirst();
-        if (winLineWithThreeMarksPlayerO.isPresent()) {
-            return Optional.of(PLAYER_O);
-        }
-        return Optional.empty();
+        return Stream.of(PLAYER_X, PLAYER_O)
+            .filter(player -> getWinLineForPlayerWithNumberOfMarks(player, 3).findFirst().isPresent())
+            .findFirst();
     }
 
     public boolean isBoardFull() {
