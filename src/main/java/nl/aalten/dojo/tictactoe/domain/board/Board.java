@@ -15,7 +15,10 @@ public class Board {
     }
 
     public void placeMark(Player player, Cell cell) throws IllegalStateException {
-        throw new IllegalStateException("Not implemented yet");
+        if (playerMarks[cell.x()][cell.y()] != null) {
+            throw new IllegalStateException("Place mark on cell " + cell + " not allowed since cell is already taken");
+        }
+        playerMarks[cell.x()][cell.y()] = player.mark();
     }
 
     public Cell determineNextBestMove(Player player) {
@@ -38,7 +41,6 @@ public class Board {
         initializePlayerMarks();
     }
 
-    /**
     /**
      * Returns a defensive copy of the array so users can not modify the original one
      * @return a clone of the original array

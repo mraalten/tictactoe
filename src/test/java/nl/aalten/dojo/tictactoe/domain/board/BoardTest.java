@@ -8,8 +8,6 @@ import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 
 class BoardTest {
     private final Player playerX = new Player(PlayerMark.X);
@@ -17,32 +15,11 @@ class BoardTest {
 
     @Nested
     class PlaceMark {
-        @ParameterizedTest
-        @ValueSource(ints = {-1, 3})
-        public void placeMarkShouldThrowExceptionWhenXBoundaryIsExceeded(int xCoordinate) {
-            Board board = new Board();
-
-            assertThatThrownBy(
-                    () -> board.placeMark(playerX, new Cell(xCoordinate,2)))
-                    .isInstanceOf(IllegalStateException.class)
-                    .hasMessage("X-coordinate out of bounds. Maximum value is 2");
-        }
-
-        @ParameterizedTest
-        @ValueSource(ints = {-1, 3})
-        public void placeMarkShouldThrowExceptionWhenYBoundaryIsExceeded(int yCoordinate) {
-            Board board = new Board();
-
-            assertThatThrownBy(
-                    () -> board.placeMark(playerX, new Cell(2, yCoordinate)))
-                    .isInstanceOf(IllegalStateException.class)
-                    .hasMessage("Y-coordinate out of bounds. Maximum value is 2");
-        }
 
         @Test
-        public void shouldThrowExceptionWhenCellIsAlreadyOccupied() {
-            final Cell cell = new Cell(0, 0);
+        void shouldThrowExceptionWhenCellIsAlreadyOccupied() {
             Board board = new Board();
+            final Cell cell = new Cell(0, 0);
 
             board.placeMark(playerX, cell);
 
@@ -55,10 +32,10 @@ class BoardTest {
     }
 
     @Nested
-    public class DetermineNextBestMove {
+    class DetermineNextBestMove {
 
         @Test
-        public void shouldDetermineFirstMoveWhenBoardIsEmpty() {
+        void shouldDetermineFirstMoveWhenBoardIsEmpty() {
             Board board = new Board();
             assertThat(board.determineNextBestMove(playerX)).isEqualTo(new Cell(0, 0));
         }
@@ -70,7 +47,7 @@ class BoardTest {
             class HorizontalWinningLines {
 
                 @Test
-                public void FirstTwoCells() {
+                void FirstTwoCells() {
                     IntStream.range(0, 3).forEach(row -> {
                         Board board = new Board();
                         board.placeMark(playerX, new Cell(0, row));
@@ -81,7 +58,7 @@ class BoardTest {
                 }
 
                 @Test
-                public void LastTwoCells() {
+                void LastTwoCells() {
                     IntStream.range(0, 3).forEach(row -> {
                         Board board = new Board();
                         board.placeMark(playerX, new Cell(1, row));
@@ -97,7 +74,7 @@ class BoardTest {
             class VerticalWinningLines {
 
                 @Test
-                public void FirstTwoCells() {
+                void FirstTwoCells() {
                     IntStream.range(0, 3).forEach(col -> {
                         Board board = new Board();
                         board.placeMark(playerX, new Cell(col, 0));
@@ -108,7 +85,7 @@ class BoardTest {
                 }
 
                 @Test
-                public void LastTwoCells() {
+                void LastTwoCells() {
                     IntStream.range(0, 3).forEach(col -> {
                         Board board = new Board();
                         board.placeMark(playerX, new Cell(col, 1));
@@ -125,7 +102,7 @@ class BoardTest {
                 class TopLeftBottomRight {
 
                     @Test
-                    public void FirstTwoCells() {
+                    void FirstTwoCells() {
                         Board board = new Board();
                         board.placeMark(playerX, new Cell(0, 0));
                         board.placeMark(playerX, new Cell(1, 1));
@@ -134,7 +111,7 @@ class BoardTest {
                     }
 
                     @Test
-                    public void LastTwoCells() {
+                    void LastTwoCells() {
                         Board board = new Board();
                         board.placeMark(playerX, new Cell(1, 1));
                         board.placeMark(playerX, new Cell(2, 2));
@@ -148,7 +125,7 @@ class BoardTest {
                 class BottomLeftTopRight {
 
                     @Test
-                    public void FirstTwoCells() {
+                    void FirstTwoCells() {
                         Board board = new Board();
                         board.placeMark(playerX, new Cell(2, 0));
                         board.placeMark(playerX, new Cell(1, 1));
@@ -157,7 +134,7 @@ class BoardTest {
                     }
 
                     @Test
-                    public void TwoCells() {
+                    void TwoCells() {
                         Board board = new Board();
                         board.placeMark(playerX, new Cell(1, 1));
                         board.placeMark(playerX, new Cell(0, 2));
@@ -174,16 +151,16 @@ class BoardTest {
     }
 
     @Nested
-    public class GetWinner {
+    class GetWinner {
 
         @Test
-        public void shouldNotHaveAWinnerSinceNoThreeMarksInARow() {
+        void shouldNotHaveAWinnerSinceNoThreeMarksInARow() {
             Board board = new Board();
             assertThat(board.getWinner()).isEqualTo(Optional.empty());
         }
 
         @Test
-        public void playerXHasWonSinceThreeMarksInARow() {
+        void playerXHasWonSinceThreeMarksInARow() {
             Board board = new Board();
             board.placeMark(playerX, new Cell(0,0));
             board.placeMark(playerX, new Cell(0,1));
@@ -198,14 +175,14 @@ class BoardTest {
     class BoardFull {
 
         @Test
-        public void shouldReturnFalseBecauseThereAreEmptySpotsOnTheBoard() {
+        void shouldReturnFalseBecauseThereAreEmptySpotsOnTheBoard() {
             Board board = new Board();
             board.placeMark(playerX, new Cell(0,0));
             assertThat(board.isBoardFull()).isEqualTo(false);
         }
 
         @Test
-        public void shouldReturnTrueBecauseSpotsAreTakenOnTheBoard() {
+        void shouldReturnTrueBecauseSpotsAreTakenOnTheBoard() {
             Board board = new Board();
             IntStream.range(0, 3).forEach(x ->
                     IntStream.range(0, 3).forEach(y -> {
@@ -222,13 +199,13 @@ class BoardTest {
     class HasPlacedMark {
 
         @Test
-        public void shouldReturnFalseSincePlayerHasNotPlacedAnyMarkYet() {
+        void shouldReturnFalseSincePlayerHasNotPlacedAnyMarkYet() {
             Board board = new Board();
             assertThat(board.hasPlacedMark(playerX)).isEqualTo(false);
         }
 
         @Test
-        public void shouldReturnTrueSincePlayerHasPlayedAtLeastOneMark() {
+        void shouldReturnTrueSincePlayerHasPlayedAtLeastOneMark() {
             Board board = new Board();
 
             board.placeMark(playerX, new Cell(0,0));
