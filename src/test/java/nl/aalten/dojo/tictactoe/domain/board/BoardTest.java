@@ -34,12 +34,6 @@ class BoardTest {
     @Nested
     class DetermineNextBestMove {
 
-        @Test
-        void shouldDetermineFirstMoveWhenBoardIsEmpty() {
-            Board board = new Board();
-            assertThat(board.determineNextBestMove(playerX)).isEqualTo(new Cell(0, 0));
-        }
-
         @Nested
         class PlayerHasTwoMarksOnWinningLine {
 

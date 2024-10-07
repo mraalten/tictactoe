@@ -20,4 +20,8 @@ public class PlayerTurnSelector {
         return PLAYER_O;
     }
 
+    public Player getOtherPlayer(Player playerOnTurn) {
+        return playerOnTurn == PlayerTurnSelector.PLAYER_O ? PlayerTurnSelector.PLAYER_X : PlayerTurnSelector.PLAYER_O;
+    }
+
 }

@@ -1,11 +1,37 @@
 package nl.aalten.dojo.tictactoe.domain.board;
 
+import static java.util.Arrays.copyOf;
+import static java.util.Arrays.stream;
+import static nl.aalten.dojo.tictactoe.domain.PlayerTurnSelector.PLAYER_O;
+import static nl.aalten.dojo.tictactoe.domain.PlayerTurnSelector.PLAYER_X;
+
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Random;
+import java.util.stream.Stream;
+
+import nl.aalten.dojo.tictactoe.domain.Die;
+import nl.aalten.dojo.tictactoe.domain.PlayerTurnSelector;
 
 public class Board {
+    private final List<WinLine> winLines = List.of(
+        new WinLine(new Cell(0,0), new Cell(1,0), new Cell(2,0)),
+        new WinLine(new Cell(0,1), new Cell(1,1), new Cell(2,1)),
+        new WinLine(new Cell(0,2), new Cell(1,2), new Cell(2,2)),
+
+        new WinLine(new Cell(0,0), new Cell(0,1), new Cell(0,2)),
+        new WinLine(new Cell(1,0), new Cell(1,1), new Cell(1,2)),
+        new WinLine(new Cell(2,0), new Cell(2,1), new Cell(2,2)),
+
+        new WinLine(new Cell(0,0), new Cell(1,1), new Cell(2,2)),
+        new WinLine(new Cell(0,2), new Cell(1,1), new Cell(2,0))
+    );
+
     private PlayerMark[][] playerMarks;
+    private final PlayerTurnSelector turnSelector = new PlayerTurnSelector(new Die());
+    private final Random random = new Random();
 
     public Board() {
         initializePlayerMarks();
@@ -16,33 +42,80 @@ public class Board {
     }
 
     public void placeMark(Player player, Cell cell) throws IllegalStateException {
-        if (playerMarks[cell.x()][cell.y()] != null) {
+        if (getValueFromBoardFor(cell) != null) {
             throw new IllegalStateException("Place mark on cell " + cell + " not allowed since cell is already taken");
         }
         playerMarks[cell.x()][cell.y()] = player.mark();
     }
 
     public Cell determineNextBestMove(Player player) {
-        // count number of marks per win line per player (both X and O)
-        // if supplied player has already 2 marks on win line, determine whether 3rd option is still open. If open, place mark and win! => end
-        // determine if 'other player' already has 2 marks on win line and whether 3rd option is still open. If open, place mark and block 'other player' => end
-        // find win line with 1 mark for supplied player and find open mark on that win line. If open, place mark => end
-        // find the first open place and place mark for supplied player => end
-        throw new IllegalStateException("Not implemented yet");
+        if (!hasPlacedMark(player)) {
+            return randomEmptyCellOnTheBoard();
+        }
+        return Stream.of(
+            getEmptyCellOnWinLineWithMarksFor(player, 2),
+            getEmptyCellOnWinLineWithMarksFor(turnSelector.getOtherPlayer(player), 2),
+            getEmptyCellOnWinLineWithMarksFor(player, 1),
+            getEmptyCellOnWinLineWithMarksFor(turnSelector.getOtherPlayer(player), 1)
+        )
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .findFirst()
+            .orElse(null);
+    }
+
+    private Cell randomEmptyCellOnTheBoard() {
+        Cell cell = null;
+        while (cell == null) {
+            int x = random.nextInt(2);
+            int y = random.nextInt(2);
+            if (playerMarks[x][y] == null) {
+                cell = new Cell(x, y);
+            }
+        }
+        return cell;
+    }
+
+    private Optional<Cell> getEmptyCellOnWinLineWithMarksFor(Player player, int numberOfMarks) {
+        return winLines.stream()
+                .filter(winline -> getNumberOfMarksOnWinLine(player, winline) == numberOfMarks)
+                .map(this::winLineHasEmptyCell)
+                .flatMap(Optional::stream)
+                .findFirst();
+    }
+
+    private long getNumberOfMarksOnWinLine(Player player, WinLine winline) {
+        return stream(winline.cells()).filter(cell -> getValueFromBoardFor(cell) == player.mark()).count();
+    }
+
+    private Optional<Cell> winLineHasEmptyCell(WinLine winline) {
+        return stream(winline.cells()).filter(cell -> getValueFromBoardFor(cell) == null).findFirst();
+    }
+
+    private PlayerMark getValueFromBoardFor(Cell cell) {
+        return playerMarks[cell.x()][cell.y()];
     }
 
     public Optional<Player> getWinner() {
-        throw new IllegalStateException("Not implemented yet");
+        final Optional<WinLine> winLineWithThreeMarksPlayerX = winLines.stream().filter(winline -> getNumberOfMarksOnWinLine(PLAYER_X, winline) == 3).findFirst();
+        if (winLineWithThreeMarksPlayerX.isPresent()) {
+            return Optional.of(PLAYER_X);
+        }
+        final Optional<WinLine> winLineWithThreeMarksPlayerO = winLines.stream().filter(winline -> getNumberOfMarksOnWinLine(PLAYER_O, winline) == 3).findFirst();
+        if (winLineWithThreeMarksPlayerO.isPresent()) {
+            return Optional.of(PLAYER_O);
+        }
+        return Optional.empty();
     }
 
     public boolean isBoardFull() {
-        return Arrays.stream(playerMarks)
-                .allMatch(row -> Arrays.stream(row)
+        return stream(playerMarks)
+                .allMatch(row -> stream(row)
                 .allMatch(Objects::nonNull));
     }
 
     public boolean hasPlacedMark(Player player) {
-        return Arrays.stream(playerMarks)
+        return stream(playerMarks)
                 .flatMap(Arrays::stream)
                 .anyMatch(mark -> mark == player.mark());
     }
@@ -56,8 +129,8 @@ public class Board {
      * @return a clone of the original array
      */
     public PlayerMark[][] getPlayerMarks() {
-        return Arrays.stream(playerMarks)
-            .map(innerArray -> Arrays.copyOf(innerArray, innerArray.length))
+        return stream(playerMarks)
+            .map(innerArray -> copyOf(innerArray, innerArray.length))
             .toArray(PlayerMark[][]::new);
     }
 

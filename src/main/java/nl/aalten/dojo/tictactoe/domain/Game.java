@@ -20,18 +20,22 @@ public class Game {
     public void start() {
         playerOnTurn = turnSelector.determinePlayerToStart();
 
-        while (!board.getWinner().isPresent() && !board.isBoardFull()) {
+        while (board.getWinner().isEmpty() && !board.isBoardFull()) {
             final Cell bestNextMove = board.determineNextBestMove(playerOnTurn);
             placeMark(bestNextMove);
             switchPlayer();
             pause();
         }
 
-        window.showMessage("Game over");
+        if (board.getWinner().isPresent()) {
+            window.showMessage("Player " + board.getWinner().get().mark() + " won! Game over");
+        } else {
+            window.showMessage("No winner! Game over");
+        }
     }
 
     private void switchPlayer() {
-        playerOnTurn = (playerOnTurn == PlayerTurnSelector.PLAYER_O) ? PlayerTurnSelector.PLAYER_X : PlayerTurnSelector.PLAYER_O;
+        this.playerOnTurn = turnSelector.getOtherPlayer(playerOnTurn);
     }
 
     private void placeMark(Cell bestNextMove) {
@@ -52,7 +56,7 @@ public class Game {
 
     private void pause() {
         try {
-            Thread.sleep(1000);
+            Thread.sleep(2000);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
