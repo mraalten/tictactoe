@@ -67,8 +67,8 @@ public class Board {
     private Cell randomEmptyCellOnTheBoard() {
         Cell cell = null;
         while (cell == null) {
-            int x = random.nextInt(2);
-            int y = random.nextInt(2);
+            int x = random.nextInt(3);
+            int y = random.nextInt(3);
             if (playerMarks[x][y] == null) {
                 cell = new Cell(x, y);
             }

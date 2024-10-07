@@ -21,10 +21,10 @@ public class Game {
         playerOnTurn = turnSelector.determinePlayerToStart();
 
         while (board.getWinner().isEmpty() && !board.isBoardFull()) {
+            pause();
             final Cell bestNextMove = board.determineNextBestMove(playerOnTurn);
             placeMark(bestNextMove);
             switchPlayer();
-            pause();
         }
 
         if (board.getWinner().isPresent()) {
