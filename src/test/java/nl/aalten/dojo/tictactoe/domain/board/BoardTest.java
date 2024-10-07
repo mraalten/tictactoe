@@ -3,6 +3,7 @@ package nl.aalten.dojo.tictactoe.domain.board;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 import org.junit.jupiter.api.Nested;
@@ -168,6 +169,74 @@ class BoardTest {
 
             }
 
+        }
+
+    }
+
+    @Nested
+    public class GetWinner {
+
+        @Test
+        public void shouldNotHaveAWinnerSinceNoThreeMarksInARow() {
+            Board board = new Board();
+            assertThat(board.getWinner()).isEqualTo(Optional.empty());
+        }
+
+        @Test
+        public void playerXHasWonSinceThreeMarksInARow() {
+            Board board = new Board();
+            board.placeMark(playerX, new Cell(0,0));
+            board.placeMark(playerX, new Cell(0,1));
+            board.placeMark(playerX, new Cell(0,2));
+
+            assertThat(board.getWinner().get()).isEqualTo(playerX);
+        }
+
+    }
+
+    @Nested
+    class BoardFull {
+
+        @Test
+        public void shouldReturnFalseBecauseThereAreEmptySpotsOnTheBoard() {
+            Board board = new Board();
+            board.placeMark(playerX, new Cell(0,0));
+            assertThat(board.isBoardFull()).isEqualTo(false);
+        }
+
+        @Test
+        public void shouldReturnTrueBecauseSpotsAreTakenOnTheBoard() {
+            Board board = new Board();
+            IntStream.range(0, 3).forEach(x ->
+                    IntStream.range(0, 3).forEach(y -> {
+                        board.placeMark(playerX, new Cell(x,y));
+                    })
+            );
+            assertThat(board.isBoardFull()).isEqualTo(true);
+
+        }
+
+    }
+
+    @Nested
+    class HasPlacedMark {
+
+        @Test
+        public void shouldReturnFalseSincePlayerHasNotPlacedAnyMarkYet() {
+            Board board = new Board();
+            assertThat(board.hasPlacedMark(playerX)).isEqualTo(false);
+        }
+
+        @Test
+        public void shouldReturnTrueSincePlayerHasPlayedAtLeastOneMark() {
+            Board board = new Board();
+
+            board.placeMark(playerX, new Cell(0,0));
+            assertThat(board.hasPlacedMark(playerX)).isEqualTo(true);
+
+            board.placeMark(playerO, new Cell(1,1));
+            board.placeMark(playerO, new Cell(1,2));
+            assertThat(board.hasPlacedMark(playerX)).isEqualTo(true);
         }
 
     }

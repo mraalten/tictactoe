@@ -1,6 +1,7 @@
 package nl.aalten.dojo.tictactoe.domain.board;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 public class Board {
     private PlayerMark[][] playerMarks;
@@ -21,11 +22,7 @@ public class Board {
         throw new IllegalStateException("Not implemented yet");
     }
 
-    public boolean hasWinner() {
-        return checkForWinner() != null;
-    }
-
-    public Player checkForWinner() {
+    public Optional<Player> getWinner() {
         throw new IllegalStateException("Not implemented yet");
     }
 
@@ -38,9 +35,10 @@ public class Board {
     }
 
     public void reset() {
-        throw new IllegalStateException("Not implemented yet");
+        initializePlayerMarks();
     }
 
+    /**
     /**
      * Returns a defensive copy of the array so users can not modify the original one
      * @return a clone of the original array

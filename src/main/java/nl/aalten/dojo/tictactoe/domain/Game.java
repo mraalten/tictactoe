@@ -20,7 +20,7 @@ public class Game {
     public void start() {
         playerOnTurn = turnSelector.determinePlayerToStart();
 
-        while (!board.hasWinner() && !board.isBoardFull()) {
+        while (!board.getWinner().isPresent() && !board.isBoardFull()) {
             final Cell bestNextMove = board.determineNextBestMove(playerOnTurn);
             placeMark(bestNextMove);
             switchPlayer();
