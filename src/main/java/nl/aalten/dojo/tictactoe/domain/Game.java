@@ -6,7 +6,7 @@ import nl.aalten.dojo.tictactoe.domain.board.Player;
 import nl.aalten.dojo.tictactoe.ui.Window;
 
 public class Game {
-    private final PlayerTurnSelector turnSelector = new PlayerTurnSelector();
+    private final PlayerTurnSelector turnSelector = new PlayerTurnSelector(new Die());
     private final Window window;
     private final Board board;
 
@@ -31,7 +31,7 @@ public class Game {
     }
 
     private void switchPlayer() {
-        playerOnTurn = (playerOnTurn == PlayerTurnSelector.playerO) ? PlayerTurnSelector.playerX : PlayerTurnSelector.playerO;
+        playerOnTurn = (playerOnTurn == PlayerTurnSelector.PLAYER_O) ? PlayerTurnSelector.PLAYER_X : PlayerTurnSelector.PLAYER_O;
     }
 
     private void placeMark(Cell bestNextMove) {

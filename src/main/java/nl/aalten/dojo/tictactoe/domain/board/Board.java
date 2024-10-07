@@ -1,6 +1,7 @@
 package nl.aalten.dojo.tictactoe.domain.board;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Optional;
 
 public class Board {
@@ -22,6 +23,11 @@ public class Board {
     }
 
     public Cell determineNextBestMove(Player player) {
+        // count number of marks per win line per player (both X and O)
+        // if supplied player has already 2 marks on win line, determine whether 3rd option is still open. If open, place mark and win! => end
+        // determine if 'other player' already has 2 marks on win line and whether 3rd option is still open. If open, place mark and block 'other player' => end
+        // find win line with 1 mark for supplied player and find open mark on that win line. If open, place mark => end
+        // find the first open place and place mark for supplied player => end
         throw new IllegalStateException("Not implemented yet");
     }
 
@@ -30,11 +36,15 @@ public class Board {
     }
 
     public boolean isBoardFull() {
-        throw new IllegalStateException("Not implemented yet");
+        return Arrays.stream(playerMarks)
+                .allMatch(row -> Arrays.stream(row)
+                .allMatch(Objects::nonNull));
     }
 
     public boolean hasPlacedMark(Player player) {
-        throw new IllegalStateException("Not implemented yet");
+        return Arrays.stream(playerMarks)
+                .flatMap(Arrays::stream)
+                .anyMatch(mark -> mark == player.mark());
     }
 
     public void reset() {
